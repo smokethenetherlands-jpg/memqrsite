@@ -1,3 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Поля: белый текст, серые плейсхолдеры */
+input, textarea {
+  @apply text-white placeholder:text-neutral-400 bg-neutral-900/60;
+}

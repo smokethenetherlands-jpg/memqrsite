@@ -19,11 +19,13 @@ export default function LoginPage() {
     return () => { sub.subscription.unsubscribe() }
   }, [])
 
-  const onSubmit = async (e: React.FormEvent) => {
+  async function onSubmit(e: React.FormEvent) {
     e.preventDefault()
     const { error } = await supabase.auth.signInWithOtp({
       email,
-      options: { emailRedirectTo: `${location.origin}/login` },
+      options: {
+        emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
+      },
     })
     if (error) alert(error.message)
     else setSent(true)
