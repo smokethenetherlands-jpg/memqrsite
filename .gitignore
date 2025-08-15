@@ -1,0 +1,20 @@
+# Dependencies / build
+node_modules/
+.next/
+out/
+dist/
+.build/
+.cache/
+.turbo/
+.vercel/
+
+# Env / локальные файлы
+.env
+.env.*
+!.env.example
+
+# Система / редакторы
+.DS_Store
+Thumbs.db
+*.log
+.vscode/
