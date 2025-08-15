@@ -1,70 +1,82 @@
-'use client'
-import React, { useState } from 'react'
+'use client';
 
-type State = 'idle' | 'sending' | 'ok' | 'error'
+import React, { useState } from 'react';
+
+type FormState =
+  | { status: 'idle' }
+  | { status: 'sending' }
+  | { status: 'ok' }
+  | { status: 'error'; message: string };
 
 export default function ContactForm() {
-  const [name, setName] = useState('')
-  const [contact, setContact] = useState('')
-  const [comment, setComment] = useState('')
-  const [state, setState] = useState<State>('idle')
-  const [error, setError] = useState<string | null>(null)
+  const [name, setName] = useState('');
+  const [contact, setContact] = useState('');
+  const [comment, setComment] = useState('');
+  const [state, setState] = useState<FormState>({ status: 'idle' });
 
   async function onSubmit(e: React.FormEvent) {
-    e.preventDefault()
-    setState('sending')
-    setError(null)
+    e.preventDefault();
+    if (state.status === 'sending') return;
+
+    setState({ status: 'sending' });
+
     try {
-      const res = await fetch('/api/telegram', {
+      const res = await fetch('/.netlify/functions/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, contact, comment }),
-      })
+      });
+
       if (!res.ok) {
-        const data = await res.json().catch(() => ({}))
-        throw new Error(data?.error || `HTTP ${res.status}`)
+        const text = await res.text();
+        throw new Error(text || `Request failed: ${res.status}`);
       }
-      setState('ok')
-      setName(''); setContact(''); setComment('')
-    } catch (err:any) {
-      setError(err.message || 'Не удалось отправить')
-      setState('error')
+
+      setState({ status: 'ok' });
+      setName('');
+      setContact('');
+      setComment('');
+    } catch (err: any) {
+      setState({ status: 'error', message: err?.message || 'Ошибка отправки' });
     }
   }
 
-  const disabled = state === 'sending'
-
   return (
-    <form onSubmit={onSubmit} className="grid gap-3 max-w-xl w-full">
+    <form onSubmit={onSubmit} className="grid gap-3">
       <input
-        className="rounded-xl border px-3 py-2 bg-neutral-900/60 text-white placeholder:text-neutral-400 outline-none focus:ring-2 focus:ring-neutral-500"
-        placeholder="Ваше имя"
         value={name}
-        onChange={(e)=>setName(e.target.value)}
+        onChange={e => setName(e.target.value)}
+        placeholder="Ваше имя"
+        className="rounded-xl border px-3 py-2 bg-neutral-900 text-white placeholder:text-neutral-400"
         required
       />
       <input
-        className="rounded-xl border px-3 py-2 bg-neutral-900/60 text-white placeholder:text-neutral-400 outline-none focus:ring-2 focus:ring-neutral-500"
-        placeholder="Контакт (телефон или email)"
         value={contact}
-        onChange={(e)=>setContact(e.target.value)}
+        onChange={e => setContact(e.target.value)}
+        placeholder="+7... / name@mail.com"
+        className="rounded-xl border px-3 py-2 bg-neutral-900 text-white placeholder:text-neutral-400"
         required
       />
       <textarea
-        className="rounded-xl border px-3 py-2 bg-neutral-900/60 text-white placeholder:text-neutral-400 outline-none focus:ring-2 focus:ring-neutral-500 min-h-32"
-        placeholder="Комментарий"
         value={comment}
-        onChange={(e)=>setComment(e.target.value)}
+        onChange={e => setComment(e.target.value)}
+        placeholder="Кого увековечиваем, какие материалы есть..."
+        className="rounded-xl border px-3 py-2 bg-neutral-900 text-white placeholder:text-neutral-400 min-h-[140px]"
       />
       <button
         type="submit"
-        disabled={disabled}
-        className="rounded-xl bg-black text-white px-4 py-3 disabled:opacity-60"
+        disabled={state.status === 'sending'}
+        className="rounded-xl bg-neutral-900 text-white px-3 py-2 disabled:opacity-50"
       >
-        {state === 'sending' ? 'Отправляем…' : 'Отправить заявку'}
+        {state.status === 'sending' ? 'Отправка…' : 'Отправить заявку'}
       </button>
-      {state === 'ok' && <p className="text-sm text-emerald-400">Заявка отправлена. Я свяжусь с вами.</p>}
-      {state === 'error' && <p className="text-sm text-red-400">Ошибка: {error}</p>}
+
+      {state.status === 'ok' && (
+        <p className="text-sm text-emerald-400">Заявка отправлена. Спасибо!</p>
+      )}
+      {state.status === 'error' && (
+        <p className="text-sm text-rose-400">Ошибка: {state.message}</p>
+      )}
     </form>
-  )
+  );
 }
