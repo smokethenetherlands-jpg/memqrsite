@@ -6,7 +6,7 @@ import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
 export default function AuthCallback() {
   const router = useRouter();
-  const supabase = createClientComponentClient(); // ← создаём клиент
+  const supabase = createClientComponentClient();
 
   useEffect(() => {
     const run = async () => {
