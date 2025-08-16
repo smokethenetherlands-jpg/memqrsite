@@ -1,23 +1,33 @@
 'use client'
-import { motion } from 'framer-motion'
 
-export default function Portfolio({ photos }: { photos: string[] }) {
+import React from 'react'
+
+type PortfolioProps = {
+  photos?: string[]
+}
+
+export default function Portfolio({ photos = [] }: PortfolioProps) {
+  if (!Array.isArray(photos)) photos = []
+
   return (
-    <section id="portfolio" className="mx-auto max-w-6xl px-4 py-16">
-      <h2 className="text-2xl font-semibold">Примеры работ</h2>
-      <div className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-4">
-        {photos.map((src, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, y: 20, scale: 0.98 }}
-            whileInView={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 0.5, delay: i * 0.05 }}
-            className="overflow-hidden rounded-2xl border bg-white/70"
-          >
-            <img src={src} className="h-40 w-full object-cover md:h-48" alt="" />
-          </motion.div>
-        ))}
-      </div>
-    </section>
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {photos.length === 0 ? (
+        <p className="text-sm text-neutral-500">
+          Галерея пока пуста. Скоро здесь появятся примеры работ.
+        </p>
+      ) : (
+        photos.map((src, i) => (
+          <div key={i} className="overflow-hidden rounded-xl border border-neutral-200/60 shadow-sm">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={src}
+              alt={`portfolio-${i+1}`}
+              className="w-full h-56 object-cover hover:scale-[1.02] transition-transform"
+              loading="lazy"
+            />
+          </div>
+        ))
+      )}
+    </div>
   )
 }
