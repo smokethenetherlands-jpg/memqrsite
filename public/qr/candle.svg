@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="90" height="140" viewBox="0 0 90 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="glow" cx="50%" cy="0%" r="70%">
+      <stop offset="0%" stop-color="#FDBA74" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#FDBA74" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="wax" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F3F4F6"/>
+      <stop offset="100%" stop-color="#E5E7EB"/>
+    </linearGradient>
+    <linearGradient id="flame" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFE08A"/>
+      <stop offset="60%" stop-color="#FF8A4A"/>
+      <stop offset="100%" stop-color="#E8590C"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="45" cy="28" rx="30" ry="24" fill="url(#glow)"/>
+  <path d="M45 10 C55 22, 55 34, 45 38 C35 34, 35 22, 45 10 Z" fill="url(#flame)"/>
+  <rect x="42" y="38" width="6" height="10" rx="2" fill="#D97706"/>
+  <rect x="28" y="50" width="34" height="70" rx="6" fill="url(#wax)" stroke="#E5E7EB"/>
+</svg>
