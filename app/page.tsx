@@ -1,3 +1,4 @@
+import BindExistingForm from '@/components/BindExistingForm';
 import React from 'react'
 import Portfolio from '@/components/Portfolio'
 

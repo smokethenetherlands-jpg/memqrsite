@@ -1,65 +1,58 @@
-// netlify/functions/contact.js
-// Отправка в Telegram. Нужны переменные окружения TG_BOT_TOKEN и TG_CHAT_ID
+// /.netlify/functions/contact.js
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-};
-
-exports.handler = async (event) => {
-  if (event.httpMethod === 'OPTIONS') {
-    return { statusCode: 200, headers: corsHeaders, body: 'ok' };
-  }
+export const handler = async (event) => {
   if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, headers: corsHeaders, body: 'Method Not Allowed' };
+    return { statusCode: 405, body: JSON.stringify({ ok: false, error: 'Method Not Allowed' }) };
   }
 
   try {
-    const { name = '', contact = '', message = '' } = JSON.parse(event.body || '{}') || {};
-    if (!name || !contact) {
-      return {
-        statusCode: 400,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ok: false, error: 'name and contact are required' }),
+    const { TG_BOT_TOKEN, TG_CHAT_ID } = process.env;
+    const payload = JSON.parse(event.body || '{}');
+    const { name = '', contact = '', message = '' } = payload;
+
+    if (!name.trim() || !contact.trim() || !message.trim()) {
+      return { statusCode: 400, body: JSON.stringify({ ok: false, error: 'Заполни все поля' }) };
+    }
+
+    // если нет токенов — не падаем, просто пишем лог
+    if (!TG_BOT_TOKEN || !TG_CHAT_ID) {
+      console.log('CONTACT FORM (no TG creds):', payload);
+    } else {
+      const text =
+        `📝 *Новая заявка*\n` +
+        `*Имя:* ${escapeMd(name)}\n` +
+        `*Контакт:* ${escapeMd(contact)}\n` +
+        `*Сообщение:*\n${escapeMd(message)}`;
+
+      const url = `https://api.telegram.org/bot${TG_BOT_TOKEN}/sendMessage`;
+      const body = {
+        chat_id: TG_CHAT_ID,
+        text,
+        parse_mode: 'Markdown',
+        disable_web_page_preview: true,
       };
+
+      const tgRes = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+
+      if (!tgRes.ok) {
+        const err = await tgRes.text();
+        console.error('Telegram error:', err);
+        return { statusCode: 500, body: JSON.stringify({ ok: false, error: 'Telegram error' }) };
+      }
     }
 
-    const token = process.env.TG_BOT_TOKEN;
-    const chatId = process.env.TG_CHAT_ID;
-
-    if (!token || !chatId) {
-      return {
-        statusCode: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ok: false, error: 'Bot env missing' }),
-      };
-    }
-
-    const text =
-      '📝 Новая заявка с сайта memqr.ru\n' +
-      `• Имя: ${name}\n` +
-      `• Контакт: ${contact}\n` +
-      (message ? `• Комментарий: ${message}\n` : '') +
-      `• Время: ${new Date().toLocaleString('ru-RU')}`;
-
-    const resp = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ chat_id: chatId, text }),
-    });
-
-    if (!resp.ok) {
-      const t = await resp.text();
-      return { statusCode: 502, headers: corsHeaders, body: `Telegram error: ${t}` };
-    }
-
-    return {
-      statusCode: 200,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ok: true }),
-    };
+    return { statusCode: 200, body: JSON.stringify({ ok: true }) };
   } catch (e) {
-    return { statusCode: 500, headers: corsHeaders, body: e?.message || 'Server error' };
+    console.error('CONTACT ERROR:', e);
+    return { statusCode: 500, body: JSON.stringify({ ok: false, error: 'Server error' }) };
   }
 };
+
+function escapeMd(str = '') {
+  // лёгкий эскейп markdown
+  return String(str).replace(/([_*[\]()~`>#+=|{}.!-])/g, '\\$1');
+}

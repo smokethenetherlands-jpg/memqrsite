@@ -1,16 +1,33 @@
-# QR Memory Next (ready)
+# Автопач проекта (сохранить внешку + включить отправку в TG)
 
-## Запуск
+## Что делает
+- добавляет `netlify/functions/send-telegram.js`
+- добавляет `components/BindExistingForm.tsx`
+- автоматически патчит `app/page.tsx`:
+  - импортирует биндер
+  - добавляет `id="contactForm"` первому `<form>`
+  - вставляет `<BindExistingForm />` сразу после `</form>`
+
+## Как запустить
+1) Распакуй архив в **корень** проекта (рядом с папкой `app`).
+2) Установи зависимости для запуска патчера: Node 18+ уже есть, зависимостей не нужно.
+3) Выполни:
 ```bash
-npm install
-npm run dev
-# http://localhost:3000
+node scripts/patch.js
 ```
-Убедись, что в `.env.local` прописаны:
-- NEXT_PUBLIC_SUPABASE_URL
-- NEXT_PUBLIC_SUPABASE_ANON_KEY
+Увидишь `✔ Патч применён`.
 
-## Страницы
-- `/` — лендинг (анимации, фото)
-- `/login` — вход по email (magic link)
-- `/dashboard` — защищённый кабинет (читает `memorials` из Supabase по owner_id)
+4) В Netlify добавь переменные окружения:
+   - `TG_BOT_TOKEN`
+   - `TG_CHAT_ID`
+
+5) Коммит и пуш:
+```bash
+git add .
+git commit -m "chore: auto patch (bind form to TG function)"
+git push origin main
+```
+
+6) В Netlify жми **Deploys → Trigger deploy → Clear cache and deploy site**.
+
+Готово. Внешний вид остаётся прежним, форма отправляет в Telegram.

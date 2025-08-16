@@ -1,0 +1,4 @@
+/* Положи эти стили в конец app/globals.css, если текст в инпутах плохо видно */
+input::placeholder, textarea::placeholder { color: rgb(163 163 163); }
+input, textarea { color: rgb(23 23 23); background: #fff; }
+button:disabled { opacity: .6; cursor: not-allowed; }
