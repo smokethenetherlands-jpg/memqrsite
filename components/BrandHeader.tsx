@@ -1,34 +1,40 @@
-'use client'
-import Link from 'next/link'
-import { motion } from 'framer-motion'
-import { QrCode } from 'lucide-react'
+'use client';
+
+import Link from 'next/link';
 
 export default function BrandHeader() {
   return (
-    <header className="sticky top-0 z-40 bg-white/70 backdrop-blur border-b border-neutral-200/60">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
-        <Link href="/" className="flex items-center gap-3">
-          <motion.div whileHover={{ rotate: -8 }}
-            className="grid h-9 w-9 place-items-center rounded-xl bg-neutral-900 text-white">
-            <QrCode className="h-5 w-5" />
-          </motion.div>
-          <div>
-            <div className="text-sm font-semibold tracking-wide">QR Memory</div>
-            <span className="text-xs text-neutral-500">memqr.ru</span>
+    <div className="sticky top-0 z-40 w-full border-b border-black/5 bg-white/70 backdrop-blur supports-[backdrop-filter]:bg-white/60">
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
+        <div className="flex items-center gap-3">
+          {/* Логотип + QR со свечой */}
+          <img
+            src="/qr-candle.svg"
+            alt="QR Memory"
+            className="h-8 w-8 shrink-0"
+            loading="eager"
+          />
+          <div className="leading-tight">
+            <div className="text-sm font-semibold">QR Memory</div>
+            <div className="text-[11px] text-neutral-500">memqr.ru</div>
           </div>
-        </Link>
-        <nav className="hidden gap-6 text-sm md:flex">
-          <a href="#about" className="hover:opacity-70">О проекте</a>
-          <a href="#how" className="hover:opacity-70">Как это работает</a>
-          <a href="#portfolio" className="hover:opacity-70">Примеры</a>
-          <a href="#contact" className="hover:opacity-70">Контакты</a>
-          <Link href="/login" className="hover:opacity-70">Вход</Link>
+        </div>
+
+        <nav className="hidden gap-6 text-sm text-neutral-700 md:flex">
+          <Link href="#about" className="hover:text-black">О проекте</Link>
+          <Link href="#how" className="hover:text-black">Как это работает</Link>
+          <Link href="#gallery" className="hover:text-black">Примеры</Link>
+          <Link href="#contacts" className="hover:text-black">Контакты</Link>
+          <Link href="/login" className="hover:text-black">Вход</Link>
         </nav>
-        <Link href="/dashboard"
-          className="inline-flex items-center gap-2 rounded-xl bg-neutral-900 px-3 py-2 text-sm text-white shadow hover:shadow-md">
-          Кабинет
+
+        <Link
+          href="#request"
+          className="inline-flex items-center gap-2 rounded-xl bg-neutral-900 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-black"
+        >
+          Заказать <span aria-hidden>➝</span>
         </Link>
       </div>
-    </header>
-  )
+    </div>
+  );
 }

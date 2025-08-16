@@ -1,142 +1,164 @@
-// app/page.tsx (hotfix: .jp -> .jpg in first image)
-import Image from "next/image";
-import ContactForm from "@/components/ContactForm";
+import BrandHeader from '@/components/BrandHeader';
+import ContactForm from '@/components/ContactForm';
 
-export const metadata = {
-  title: "QR Memory — страницы памяти с QR-кодом",
-  description:
-    "Один скан — живая память. Аккуратные таблички с QR-кодами, ведущими на страницу памяти.",
-};
-
-const photos = [
-  "https://eezvkzgssllsvzuklnhv.supabase.co/storage/v1/object/public/memqr%20photo/065cfebaedb06404f183b22ab5dbff96.jpg",
-  "https://eezvkzgssllsvzuklnhv.supabase.co/storage/v1/object/public/memqr%20photo/5db8a1a909faa39eae7f3d7252b67e52.jpg",
-  "https://eezvkzgssllsvzuklnhv.supabase.co/storage/v1/object/public/memqr%20photo/8a9ac8a619396f3500fe389d9694432a.jpg",
-  "https://eezvkzgssllsvzuklnhv.supabase.co/storage/v1/object/public/memqr%20photo/bfd53420bcebecb1c0e5ecf5c1b4b5ce.jpg",
+const gallery = [
+  '/gallery/1.jpg',
+  '/gallery/2.jpg',
+  '/gallery/3.jpg',
+  '/gallery/4.jpg',
 ];
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen bg-[#FAF9F7] text-neutral-900">
+      <BrandHeader />
+
       {/* HERO */}
-      <section className="border-b bg-neutral-50/40">
-        <div className="mx-auto max-w-6xl px-4 py-14 sm:py-16 md:py-20">
-          <div className="grid items-center gap-10 md:grid-cols-2">
-            <div>
-              <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-3 py-1 text-xs text-neutral-500">
-                memqr.ru — QR-коды памяти
+      <section className="relative border-b border-black/5 bg-[radial-gradient(1200px_600px_at_75%_20%,rgba(255,182,130,0.12),transparent_40%),radial-gradient(1000px_500px_at_20%_10%,rgba(0,0,0,0.06),transparent_45%)]">
+        <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-16 md:grid-cols-2 md:py-24">
+          <div>
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-black/10 bg-white/70 px-3 py-1 text-xs text-neutral-600 backdrop-blur">
+              QR-коды памяти на memqr.ru
+            </div>
+            <h1 className="mb-5 text-4xl font-black leading-tight md:text-5xl">
+              Один скан — живая<br />память.
+            </h1>
+            <p className="mb-7 max-w-xl text-[15px] text-neutral-700">
+              Я создаю аккуратные таблички с QR-кодами, которые ведут на достойно
+              оформленную страницу памяти на memqr.ru. На странице — биография,
+              фото, видео, важные даты и тёплые воспоминания.
+            </p>
+
+            <div className="flex flex-wrap gap-3">
+              <a
+                href="#gallery"
+                className="inline-flex items-center gap-2 rounded-xl border border-black/10 bg-white px-4 py-2 text-sm font-medium hover:bg-white/80"
+              >
+                Посмотреть примеры
+              </a>
+              <a
+                href="#request"
+                className="inline-flex items-center gap-2 rounded-xl bg-neutral-900 px-4 py-2 text-sm font-medium text-white hover:bg-black"
+              >
+                Оставить заявку <span aria-hidden>➝</span>
+              </a>
+            </div>
+
+            <div className="mt-8 grid grid-cols-3 gap-4 text-xs text-neutral-600">
+              <div className="rounded-xl border border-black/10 bg-white px-3 py-2 text-center">
+                Долговечные материалы
               </div>
-              <h1 className="mb-6 text-4xl font-bold leading-tight tracking-tight sm:text-5xl">
-                Один скан — живая память.
-              </h1>
-              <p className="mb-8 text-neutral-600">
-                Таблички с QR-кодами ведут на красиво оформленную страницу памяти: фото,
-                биография, важные даты и тёплые воспоминания. Личный кабинет — редактируете сами.
-              </p>
-              <div className="flex flex-wrap items-center gap-3">
-                <a href="#examples" className="inline-flex items-center gap-2 rounded-xl border border-neutral-200 bg-white px-4 py-2 text-sm font-medium text-neutral-800 shadow-sm hover:bg-neutral-50">
-                  Примеры
-                </a>
-                <a href="#contact" className="inline-flex items-center gap-2 rounded-xl bg-neutral-900 px-4 py-2 text-sm font-medium text-white hover:bg-neutral-800">
-                  Оставить заявку
-                </a>
+              <div className="rounded-xl border border-black/10 bg-white px-3 py-2 text-center">
+                Индивидуальный подход
+              </div>
+              <div className="rounded-xl border border-black/10 bg-white px-3 py-2 text-center">
+                Уточнённый дизайн
               </div>
             </div>
-            <div className="relative hidden md:block">
-              <div className="aspect-[4/5] w-full overflow-hidden rounded-2xl border border-neutral-200 bg-white">
-                <Image
-                  src={photos[0]}
-                  alt="QR-память — пример"
-                  width={800}
-                  height={1000}
-                  className="h-full w-full object-cover"
-                  priority
-                  unoptimized
-                />
-              </div>
-            </div>
+          </div>
+
+          <div className="mx-auto max-w-md">
+            {/* QR-бейдж с свечой справа — просто изображение из /public */}
+            <img
+              src="/qr-candle.svg"
+              alt="QR со свечой"
+              className="mx-auto w-72 drop-shadow-xl md:w-80"
+              loading="eager"
+            />
           </div>
         </div>
       </section>
 
-      {/* О ПРОЕКТЕ */}
-      <section className="py-12 md:py-14">
-        <div className="mx-auto grid max-w-6xl grid-cols-1 gap-10 px-4 md:grid-cols-2">
-          <div>
-            <h2 className="mb-4 text-2xl font-semibold">О проекте QR Memory</h2>
-            <p className="mb-5 text-neutral-700">
-              Бережно соединяю офлайн-память с живой цифровой историей.
-              QR-код ведёт на персональную страницу памяти на memqr.ru, где вы сами
-              наполняете материалы в любое время.
-            </p>
-            <ul className="space-y-2 text-neutral-700">
-              <li>• Индивидуальный дизайн под памятник</li>
-              <li>• Личный кабинет для семьи</li>
-              <li>• Редиректом управляю я — без сторонних сервисов</li>
-              <li>• Фото, видео, биография, воспоминания</li>
-              <li>• Доставка табличек (установку не выполняю)</li>
+      {/* ABOUT */}
+      <section id="about" className="mx-auto max-w-6xl px-4 py-16 md:py-20">
+        <h2 className="mb-6 text-2xl font-bold">О проекте QR Memory</h2>
+        <div className="grid gap-10 md:grid-cols-2">
+          <div className="prose max-w-none text-[15px] text-neutral-800">
+            <ul className="list-disc pl-5">
+              <li>Эстетичные таблички под вашу стилистику памятника</li>
+              <li>Личный кабинет: вы сами редактируете страницу памяти</li>
+              <li>Надёжный редирект и контроль ссылки на вашей стороне</li>
+              <li>Страница памяти с биографией, фото и видео</li>
+              <li>Возможность обновлять материалы без замены таблички</li>
             </ul>
           </div>
 
-          <div id="examples">
-            <h3 className="mb-3 text-lg font-medium">Как это выглядит</h3>
-            <div className="grid grid-cols-2 gap-4">
-              {photos.slice(1).map((src, i) => (
-                <div key={i} className="aspect-[4/3] overflow-hidden rounded-xl border border-neutral-200 bg-white">
-                  <Image
-                    src={src}
-                    alt={`Пример ${i + 1}`}
-                    width={640}
-                    height={480}
-                    className="h-full w-full object-cover"
-                    unoptimized
-                  />
-                </div>
+          {/* мини-галерея справа */}
+          <div className="rounded-2xl border border-black/10 bg-white p-3">
+            <div className="grid grid-cols-2 gap-3">
+              {gallery.slice(0, 4).map((src, i) => (
+                <img
+                  key={i}
+                  src={src}
+                  alt=""
+                  className="aspect-[4/3] w-full rounded-xl object-cover"
+                  loading="lazy"
+                />
               ))}
             </div>
           </div>
         </div>
       </section>
 
-      {/* КАК ЭТО РАБОТАЕТ */}
-      <section className="border-y bg-neutral-50/40">
-        <div className="mx-auto max-w-6xl px-4 py-12 md:py-14">
-          <h2 className="mb-8 text-2xl font-semibold">Как это работает</h2>
+      {/* HOW IT WORKS */}
+      <section id="how" className="border-y border-black/5 bg-white">
+        <div className="mx-auto max-w-6xl px-4 py-16 md:py-20">
+          <h2 className="mb-10 text-2xl font-bold">Как это работает</h2>
           <div className="grid gap-6 md:grid-cols-4">
             {[
-              ["Заявка", "Вы оставляете заявку и отправляете материалы."],
-              ["Дизайн", "Готовлю страницу памяти и подключаю личный кабинет."],
-              ["QR и печать", "Формирую QR с редиректом, изготавливаю табличку."],
-              ["Доставка", "Отправляю удобной службой доставки."],
+              ['Заявка', 'Вы оставляете заявку и отправляете материалы.'],
+              ['Дизайн', 'Создаю страницу памяти и даю доступ в личный кабинет.'],
+              ['QR и печать', 'Готовлю QR-код с редиректом на страницу.'],
+              ['Доставка', 'Отправляю табличку удобной доставкой.'],
             ].map(([title, text], i) => (
-              <div key={i} className="rounded-xl border border-neutral-200 bg-white p-4 text-neutral-700">
-                <div className="mb-2 text-sm font-semibold">{i + 1}. {title}</div>
-                <div className="text-sm">{text}</div>
+              <div
+                key={i}
+                className="rounded-2xl border border-black/10 bg-white p-5"
+              >
+                <div className="mb-2 text-sm font-semibold text-neutral-500">
+                  {i + 1 < 10 ? `0${i + 1}` : i + 1}
+                </div>
+                <div className="mb-2 font-medium">{title}</div>
+                <div className="text-[15px] text-neutral-700">{text}</div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ФОРМА */}
-      <section className="py-12 md:py-16" id="contact">
-        <div className="mx-auto grid max-w-6xl grid-cols-1 gap-12 px-4 lg:grid-cols-2">
-          <div className="rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm">
-            <h3 className="mb-2 text-xl font-semibold">Оставить заявку</h3>
-            <p className="mb-6 text-sm text-neutral-600">
-              Заполните форму — я свяжусь с вами и уточню детали.
+      {/* GALLERY */}
+      <section id="gallery" className="mx-auto max-w-6xl px-4 py-16 md:py-20">
+        <h2 className="mb-6 text-2xl font-bold">Примеры работ</h2>
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {gallery.map((src, i) => (
+            <img
+              key={i}
+              src={src}
+              alt=""
+              className="aspect-[4/3] w-full rounded-2xl object-cover"
+              loading="lazy"
+            />
+          ))}
+        </div>
+      </section>
+
+      {/* CONTACTS + FORM */}
+      <section id="request" className="border-t border-black/5 bg-white">
+        <div className="mx-auto grid max-w-6xl gap-10 px-4 py-16 md:grid-cols-2">
+          <div id="contacts">
+            <h2 className="mb-3 text-2xl font-bold">Оставить заявку</h2>
+            <p className="mb-6 text-[15px] text-neutral-700">
+              Напишите, и я свяжусь с вами, чтобы уточнить детали.
             </p>
-            <ContactForm />
+            <ul className="mb-8 grid gap-3 text-[15px] text-neutral-800">
+              <li>Телефон/WhatsApp: <span className="text-neutral-500">по запросу</span></li>
+              <li>Email: <a href="mailto:hello@memqr.ru" className="underline underline-offset-2">hello@memqr.ru</a></li>
+              <li>Сайт: <a href="https://memqr.ru" className="underline underline-offset-2">memqr.ru</a></li>
+            </ul>
           </div>
 
-          <div>
-            <h2 className="mb-4 text-2xl font-semibold">Почему QR Memory</h2>
-            <ul className="space-y-3 text-neutral-700">
-              <li>• Эстетично и долговечно</li>
-              <li>• Вся информация — по одному скану</li>
-              <li>• Изменения без замены таблички</li>
-              <li>• Личный доступ к редактированию 24/7</li>
-            </ul>
+          <div className="rounded-2xl border border-black/10 bg-white p-5 shadow-sm">
+            <ContactForm />
           </div>
         </div>
       </section>
